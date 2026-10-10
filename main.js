@@ -1794,6 +1794,15 @@ class MoodCalendarPlugin extends obsidian.Plugin {
         this.refreshViews();
     }
 
+    // data.json 被外部修改（同步、git、手动编辑）时重新加载设置，避免下次保存时覆盖外部修改
+    // Reload settings when data.json changes outside Obsidian (Sync, git, hand edit),
+    // so the next save does not overwrite the external change
+    async onExternalSettingsChange() {
+        await this.loadSettings();
+        this.applyColorSettings();
+        this.refreshViews();
+    }
+
     refreshViews(shouldAutoScroll) {
         var leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_MOOD);
         leaves.forEach(function (leaf) {
